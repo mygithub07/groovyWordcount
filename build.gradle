@@ -1,0 +1,25 @@
+apply plugin: 'groovy'
+apply plugin: 'application'
+version = '1.0'
+mainClassName='CountGroovyJob'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.0.0'
+    compile 'org.apache.hadoop:hadoop-common:2.7.1'
+    compile 'org.apache.hadoop:hadoop-core:1.2.1'
+
+}
+
+task Createjar(type: Jar,dependsOn:[':compileJava',':compileGroovy']) {
+    from files(sourceSets.main.output.classesDir)
+    from configurations.runtime.asFileTree.files.collect { zipTree(it) }
+
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
+
